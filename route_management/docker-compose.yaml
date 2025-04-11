@@ -1,0 +1,12 @@
+services:
+  route_management:
+    build: .
+    container_name: route_management
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "1337:1337"
+    volumes:
+      - "./src:/app" # To be changed in the production stage
+    restart: always
