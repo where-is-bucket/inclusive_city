@@ -1,0 +1,30 @@
+[project]
+name = "inclusive-city"
+version = "0.1.0"
+description = "Inclusive City is the application for inclusive people <3."
+authors = [
+    "teebeeaf"
+]
+readme = "README.md"
+requires-python = ">=3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "inclusive-city-python-lib"
+version = "0.1.0"
+description = ""
+authors = [
+    "teebeeaf"
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.2"
+pydantic = "^2.9.2"
+typing-extensions = ">=4.12.2"
+uvicorn = ">=0.26.0,<0.27.0"
