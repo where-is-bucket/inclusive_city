@@ -1,5 +1,7 @@
+from typing import List
 from pydantic import BaseModel
 
+from app.domain.place import Place
 
 class CreatePlaceRequest(BaseModel):
     place_name: str
@@ -11,3 +13,6 @@ class CreatePlaceRequest(BaseModel):
 
 class CreatePlaceResponse(BaseModel):
     place_id: str
+
+class GetPlacesResponse(BaseModel):
+    places: List[Place] = []

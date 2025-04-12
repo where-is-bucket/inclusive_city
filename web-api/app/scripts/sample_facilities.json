@@ -1,0 +1,86 @@
+[
+    {
+      "text": "Засоби акустичної орієнтації  у закладі",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Засоби акустичної орієнтації  у закладі (аудіосповіщення)",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Засоби акустичної орієнтації (аудіосповіщення, шритф Брайля)",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT",
+        "HEARING_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "ІПТ з голосовим модулем",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Є нормативний пандус",
+      "disability_types": [
+        "MOBILITY_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Банкомати з голосовим модулем",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Ліфт має звуковий супровід",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Ліфт має звуковий супровід, кнопки продубльовані шрифтом Брайля",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT",
+        "HEARING_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "В укритті є вбиральня для людей з інвалідністю",
+      "disability_types": [
+        "MOBILITY_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "В укритті є вбиральня для людей з інвалідністю або універсальна вбиральня, яка зручна всім",
+      "disability_types": [
+        "MOBILITY_IMPAIRMENT",
+        "VISUAL_IMPAIRMENT",
+        "HEARING_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Є нормативний пандус (кут від 3 до 5 градусів , ширина пандуса - 1,2 м; з обох боків є поручні, поверхня пандусу не слизька)",
+      "disability_types": [
+        "MOBILITY_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Шляхи евакуації промарковані візуально та тактильно та є доступними для маломобільних груп населення",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT",
+        "HEARING_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Шрифт Брайля",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT",
+        "HEARING_IMPAIRMENT"
+      ]
+    }
+  ]

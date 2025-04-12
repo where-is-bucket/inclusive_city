@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pydantic import field_serializer, root_validator
@@ -7,8 +7,19 @@ from app.domain.place import Place
 
 class MongoPlaceRepository:
     def __init__(self, database: AsyncIOMotorDatabase):
-        self.client = database
+        self.database = database
         self.collection = database["Places"]
+    
+    async def get_all(self) -> List[Place]:
+        cursor = self.collection.find()
+
+        places = []
+        
+        async for document in cursor:
+            place = Place.model_validate(document)
+            places.append(place)
+
+        return places
     
     async def get_by_id(self, place_id: int) -> Optional[Place]:
         obj_id = ObjectId(place_id)
@@ -29,8 +40,8 @@ class MongoPlaceRepository:
 
             await self.collection.replace_one(
                 { "_id": ObjectId(place.place_id) },
-                place.model_dump()
-            )
+                place.model_dump())
+            
         else:
             mongoPlace = MongoPlace(**place.model_dump(), version=1)
 

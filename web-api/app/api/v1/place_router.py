@@ -6,12 +6,26 @@ from app.domain.location import Location
 from app.domain.place import Place
 from app.domain.placeType import PlaceType
 from app.infrastructure.mongoPlaceRepository import MongoPlaceRepository
-from app.schemas.createPlace import CreatePlaceRequest, CreatePlaceResponse
+from app.schemas.placeSchemas import CreatePlaceRequest, CreatePlaceResponse, GetPlacesResponse
 
 
 router = APIRouter()
 
-@router.post("/place", response_model=CreatePlaceResponse)
+@router.get("/places", response_model=GetPlacesResponse)
+async def get_places(place_repository: MongoPlaceRepository = Depends(get_place_repository)):
+
+    places = await place_repository.get_all();
+
+    return GetPlacesResponse(places=places)
+
+@router.get("/places/{place_id}", response_model=Place)
+async def get_by_id(
+    place_id: str,
+    place_repository: MongoPlaceRepository = Depends(get_place_repository)):
+
+    return await place_repository.get_by_id(place_id=place_id);
+
+@router.post("/places", response_model=CreatePlaceResponse)
 async def create_place(
     request: CreatePlaceRequest,
     place_repository: MongoPlaceRepository = Depends(get_place_repository)):

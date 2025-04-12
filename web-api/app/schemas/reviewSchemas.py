@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 
-class AddReviewRequest(BaseModel):
+class CreateReviewRequest(BaseModel):
     place_id: str
     author_name: str
     comment: str
     rating: int
 
-class AddReviewResponse(BaseModel):
+class CreateReviewResponse(BaseModel):
     review_id: str
