@@ -1,0 +1,8 @@
+include:
+  - path:
+      - "./route_management/docker-compose.yaml"
+  - path:
+      - "./mongodb/docker-compose.yaml"
+volumes:
+  mongo-volume:
+    driver: local
