@@ -13,6 +13,7 @@ class Place(BaseModel):
     address: str
     description: str
     location: Location
+    accessibility_rate: float = 0
     reviews: List[Review] = []
     facilities: List[Facility] = []
 
