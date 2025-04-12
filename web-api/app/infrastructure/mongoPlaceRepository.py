@@ -58,6 +58,30 @@ class MongoPlaceRepository:
 
         return results
 
+    async def find_by_str_id(self, place_id: str) -> Optional[Place]:
+        obj_id = ObjectId(place_id)
+        document = await self.collection.find_one({"_id": obj_id})
+        if document is None:
+            return None
+        return MongoPlace.model_validate(document)
+
+    async def update_facilities(self, place_id: str, updated_facilities: list):
+        place = await self.find_by_str_id(place_id)
+        if not place:
+            raise ValueError("Place not found")
+
+        index_inc = 1
+        for fac in updated_facilities:
+            fac.facility_id = index_inc
+            index_inc += 1
+
+        place.facilities = updated_facilities
+
+        await self.collection.replace_one(
+            {"_id": ObjectId(place.place_id)},
+            place.model_dump()
+        )
+
 
 class MongoPlace(Place):
     version: int = 0

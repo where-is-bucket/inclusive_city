@@ -1,8 +1,11 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from fastapi.responses import JSONResponse
 from typing import List, Optional
 
+from pydantic import BaseModel
+
 from app.di import get_place_repository
+from app.domain.facility import Facility
 from app.domain.location import Location
 from app.domain.place import Place
 from app.domain.placeType import PlaceType
@@ -42,3 +45,19 @@ async def get_places_by_disability_types(
     places = await place_repository.find_by_disability_types(disability_types)
 
     return places
+
+
+class UpdateFacilitiesRequest(BaseModel):
+    facilities: List[Facility]
+
+
+@router.put("/place/{place_id}/facilities", response_model=CreatePlaceResponse)
+async def update_place_facilities(
+        place_id: str,
+        request: UpdateFacilitiesRequest,
+        place_repository: MongoPlaceRepository = Depends(get_place_repository)):
+    try:
+        await place_repository.update_facilities(place_id, request.facilities)
+        return CreatePlaceResponse(place_id=place_id)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Place not found")
