@@ -1,0 +1,14 @@
+services:
+  web-ui:
+    container_name: web-ui
+    build:
+      context: .
+      target: builder
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./app:/usr/src/app
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
