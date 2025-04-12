@@ -1,0 +1,6 @@
+include:
+  - path:
+      - "./mongodb/docker-compose.yaml"
+volumes:
+  mongo-volume:
+    driver: local
