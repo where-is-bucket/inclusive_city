@@ -1,7 +1,20 @@
+import dataclasses
+from typing import List
+
+from pydantic_core.core_schema import plain_serializer_function_ser_schema
 from textblob import TextBlob
 from langdetect import detect
 from deep_translator import GoogleTranslator
-
+# from pydantic import BaseModel
+#
+# @dataclasses.dataclass
+# class Review:
+#     review_text: str
+#     review_score: int
+#
+#
+# class Place(BaseModel):
+#     reviews: List[Review] = []
 
 ACCESSIBILITY_KEYWORDS = [
     "пандус", "безбар’єрн", "доступ",
@@ -24,11 +37,13 @@ def sentiments(text):
     text = TextBlob(text)
     return text.sentiment.polarity
 
-
-def calculate_inclusivity_score(reviews, wheelchairAccessibleParking=False, wheelchairAccessibleEntrance=False):
+def calculate_inclusivity_score(place: Place):
+    reviews = [review.review_text for review in place.reviews]
+    average = sum([review.review_score for review in place.reviews]) / len(place.reviews)
     relevant = []
     positive_mentions = 0
     total_mentions = len(reviews)
+    print(average)
 
     for review in reviews:
         text = review
@@ -62,35 +77,15 @@ def calculate_inclusivity_score(reviews, wheelchairAccessibleParking=False, whee
     if total_mentions == 0:
         return 0.0  # Немає згадок = 0 балів
     print(total_mentions, positive_mentions)
-    ratio = positive_mentions / total_mentions  # частка позитивних згадок
-    volume_bonus = min(1.0, total_mentions / 10)  # більше згадок = вищий бонус
-    score = round(0.6 * ratio + 0.2 * volume_bonus + 0.15 * wheelchairAccessibleParking + 0.15 * wheelchairAccessibleEntrance, 2)  # ваги можна налаштовувати
+    ratio = positive_mentions / total_mentions
+    score = round(0.7 * ratio + 0.3 * ((average - 1) / 4), 2)  # ваги можна налаштовувати
 
     return score
 
-dummy_reviews_1 = [
-    "Дуже зручний вхід для візочників, є пандус!",
-    "Люблю тутешні вказівники.",
-    "Безбар’єрний доступ до туалету це класно!"
-]
 
-dummy_reviews_2 = [
-    "Обожнюю тутешній ліфт і пандус",
-    "Обожнюю тутешній ліфт і пандус",
-    "Ненавиджу тутешній ліфт і пандус"
-]
-
-dummy_reviews_3 = [
-    "Ненавиджу тутешні поручні",
-    "Нічого не зроблено для людей зі слабким зором",
-    "Дуже зручний вхід для візочників, є пандус!"
-]
-
-score = calculate_inclusivity_score(dummy_reviews_1, False, False)
-print("Коефіцієнт потужності 1:", score)
-
-score = calculate_inclusivity_score(dummy_reviews_2, False, False)
-print("Коефіцієнт потужності 2:", score)
-
-score = calculate_inclusivity_score(dummy_reviews_3, False, False)
-print("Коефіцієнт потужності 3:", score)
+# review_1 = Review(review_score = 4, review_text = "Тут є чудовий пандус")
+# review_2 = Review(review_score = 1, review_text = "Ненавиджу тутешній ліфт")
+# place = Place(reviews=[review_1, review_2])
+#
+# score = calculate_inclusivity_score(place)
+# print(score)
