@@ -50,12 +50,13 @@ async def create_place(
     return response
 
 
-@router.get("/place", response_model=List[Place])
+@router.get("/search-places", response_model=List[Place])
 async def get_places_by_disability_types(
         disability_types: List[DisabilityType] = Query(default=[]),
+        disability_type: List[str] = Query(default=[]),
         place_repository: MongoPlaceRepository = Depends(get_place_repository)):
 
-    places = await place_repository.find_by_disability_types(disability_types)
+    places = await place_repository.find_by_disability_types(disability_type)
 
     return places
 
