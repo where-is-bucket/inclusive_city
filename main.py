@@ -2,9 +2,18 @@ from textblob import TextBlob
 from langdetect import detect
 from deep_translator import GoogleTranslator
 
+
 ACCESSIBILITY_KEYWORDS = [
-    "інвалід", "пандус", "доступ", "доступний", "ліфт",
-    "бар’єр", "візок", "сходи", "безбар’єрний", "туалет", "перешкод"
+    "пандус", "безбар’єрн", "доступ",
+    "бар’єр", "перешкода","перепон",
+    "широкий прохід", "широкі двері", "автоматичні двері", "вхід з вулиці",
+    "інвалід", "візок", "візочники",
+    "місце для інвалідів", "туалет для інвалідів", "паркомісце для інвалідів",
+    "ліфт", "підйомник", "платформа",
+    "доступний туалет", "туалет для інвалідів", "санвузол", "громадський туалет", "унітаз з поручнями",
+    "інвалідне паркомісце", "паркінг для інвалідів", "доступна парковка", "широке паркомісце",
+    "навігація для незрячих", "шрифт Брайля", "озвучка", "вказівники", "дублювання жестовою мовою",
+    "сурдопереклад", "аудіогід", "слабозорий", "поганий зір", "поручні", "контрастна розмітка"
 ]
 
 def translate_uk_to_en(text):
@@ -16,21 +25,13 @@ def sentiments(text):
     return text.sentiment.polarity
 
 
-def calculate_inclusivity_score(reviews):
+def calculate_inclusivity_score(reviews, wheelchairAccessibleParking=False, wheelchairAccessibleEntrance=False):
     relevant = []
     positive_mentions = 0
-    total_mentions = 0
-    wheelchairAccessibleParking = 0
-    wheelchairAccessibleEntrance = 0
+    total_mentions = len(reviews)
 
     for review in reviews:
-        text = review.get("text", "")
-
-        if "wheelchairAccessibleParking" in review:
-            wheelchairAccessibleParking = 1 if review["wheelchairAccessibleParking"] == "true" else 0
-
-        if "wheelchairAccessibleEntrance" in review:
-            wheelchairAccessibleEntrance = 1 if review["wheelchairAccessibleEntrance"] == "true" else 0
+        text = review
 
         if not text.strip():
             continue
@@ -45,7 +46,6 @@ def calculate_inclusivity_score(reviews):
 
         text_lower = text.lower()
         if any(k in text_lower for k in ACCESSIBILITY_KEYWORDS):
-            total_mentions += 1
             try:
                 translated = translate_uk_to_en(text)
                 sentiment = sentiments(str(translated))
@@ -61,42 +61,36 @@ def calculate_inclusivity_score(reviews):
 
     if total_mentions == 0:
         return 0.0  # Немає згадок = 0 балів
-    print(positive_mentions)
+    print(total_mentions, positive_mentions)
     ratio = positive_mentions / total_mentions  # частка позитивних згадок
     volume_bonus = min(1.0, total_mentions / 10)  # більше згадок = вищий бонус
-    score = round(0.7 * ratio + 0.3 * volume_bonus + 0.2 * wheelchairAccessibleParking + 0.2 * wheelchairAccessibleEntrance, 2)  # ваги можна налаштовувати
+    score = round(0.6 * ratio + 0.2 * volume_bonus + 0.15 * wheelchairAccessibleParking + 0.15 * wheelchairAccessibleEntrance, 2)  # ваги можна налаштовувати
 
     return score
 
 dummy_reviews_1 = [
-    {"text": "Дуже зручний вхід для візочників, є пандус!"},
-    {"text": "Люблю сходи."},
-    {"text": "Безбар’єрний доступ до туалету це класно!"},
-    {"wheelchairAccessibleParking": "true"},
-    {"wheelchairAccessibleEntrance": "true"}
+    "Дуже зручний вхід для візочників, є пандус!",
+    "Люблю тутешні вказівники.",
+    "Безбар’єрний доступ до туалету це класно!"
 ]
 
 dummy_reviews_2 = [
-    {"text": "Обожнюю тутешній ліфт і пандус"},
-    {"text": "Обожнюю тутешній ліфт і пандус"},
-    {"text": "Обожнюю тутешній ліфт і пандус"},
-    {"wheelchairAccessibleParking": "false"},
-    {"wheelchairAccessibleEntrance": "false"}
+    "Обожнюю тутешній ліфт і пандус",
+    "Обожнюю тутешній ліфт і пандус",
+    "Ненавиджу тутешній ліфт і пандус"
 ]
 
 dummy_reviews_3 = [
-    {"text": "Ненавиджу тутешні сходи"},
-    {"text": "Нічого не зроблено для людей зі слабким зором"},
-    {"text": "Дуже зручний вхід для візочників, є пандус!"},
-    {"wheelchairAccessibleParking": "false"},
-    {"wheelchairAccessibleEntrance": "false"}
+    "Ненавиджу тутешні поручні",
+    "Нічого не зроблено для людей зі слабким зором",
+    "Дуже зручний вхід для візочників, є пандус!"
 ]
 
-score = calculate_inclusivity_score(dummy_reviews_1)
+score = calculate_inclusivity_score(dummy_reviews_1, False, False)
 print("Коефіцієнт потужності 1:", score)
 
-score = calculate_inclusivity_score(dummy_reviews_2)
+score = calculate_inclusivity_score(dummy_reviews_2, False, False)
 print("Коефіцієнт потужності 2:", score)
 
-score = calculate_inclusivity_score(dummy_reviews_3)
+score = calculate_inclusivity_score(dummy_reviews_3, False, False)
 print("Коефіцієнт потужності 3:", score)
