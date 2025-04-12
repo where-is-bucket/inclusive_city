@@ -1,6 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from fastapi import Depends
 
+from app.infrastructure.mongoFacilityRepository import MongoFacilityRepository
 from app.infrastructure.mongoPlaceRepository import MongoPlaceRepository
 
 MONGO_URI = "mongodb://localhost:27017?directConnection=true"
@@ -16,6 +17,11 @@ def get_database(
 
 
 def get_place_repository(
-        client: AsyncIOMotorDatabase = Depends(get_database)) -> MongoPlaceRepository:
+        database: AsyncIOMotorDatabase = Depends(get_database)) -> MongoPlaceRepository:
 
-    return MongoPlaceRepository(client)
+    return MongoPlaceRepository(database)
+
+def get_facility_repository(
+        database: AsyncIOMotorDatabase = Depends(get_database)) -> MongoFacilityRepository:
+    
+    return MongoFacilityRepository(database)
