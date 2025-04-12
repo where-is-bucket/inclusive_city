@@ -14,7 +14,6 @@ class Coordinate(BaseModel):
             }
         }
 
-
 class Step(BaseModel):
     distance: dict
     duration: dict
