@@ -10,6 +10,8 @@ from app.domain.placeType import PlaceType
 from app.infrastructure.mongoFacilityRepository import MongoFacilityRepository
 from app.infrastructure.mongoPlaceRepository import MongoPlaceRepository
 from app.schemas.placeSchemas import CreatePlaceRequest, CreatePlaceResponse
+from app.ml.ml import calculate_inclusivity_score
+from app.schemas.placeSchemas import CreatePlaceRequest, CreatePlaceResponse, GetPlacesResponse
 
 
 router = APIRouter()
@@ -48,6 +50,18 @@ async def create_place(
     response = CreatePlaceResponse(place_id = place.place_id)
 
     return response
+
+
+@router.post("/places/{place_id}/recalculate-coef", response_model=Place)
+async def recalculate_power_coef(
+        place_id: str,
+        place_repository: MongoPlaceRepository = Depends(get_place_repository)):
+
+    place = await place_repository.get_by_str_id(place_id)
+    place.accessibility_rate = calculate_inclusivity_score(place)
+    await place_repository.save(place)
+
+    return place
 
 
 @router.get("/search-places", response_model=List[Place])

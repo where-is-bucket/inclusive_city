@@ -29,6 +29,18 @@ class MongoPlaceRepository:
         place = MongoPlace.model_validate(document) 
 
         return place
+
+    async def get_by_str_id(self, place_id: str) -> Optional[Place]:
+        obj_id = ObjectId(place_id)
+
+        document = await self.collection.find_one({"_id": obj_id})
+
+        if document is None:
+            return None
+
+        place = MongoPlace.model_validate(document)
+
+        return place
     
     async def save(self, place: Place):
 
