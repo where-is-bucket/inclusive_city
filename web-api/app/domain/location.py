@@ -4,6 +4,6 @@ from dataclasses_json import dataclass_json
 @dataclass_json
 @dataclass
 class Location:
-    latitude: int
-    longitude: int
+    latitude: float
+    longitude: float
 

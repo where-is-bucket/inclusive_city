@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pydantic import field_serializer, root_validator
@@ -37,8 +37,27 @@ class MongoPlaceRepository:
             result = await self.collection.insert_one(mongoPlace.model_dump())
 
             place.place_id = str(result.inserted_id)
-        
-        
+
+    async def find_by_disability_types(self, disability_types: List[str]) -> List[Place]:
+        query = {}
+        if disability_types:
+            query = {
+                "facilities": {
+                    "$elemMatch": {
+                        "disability_type": {"$in": disability_types}
+                    }
+                }
+            }
+
+        cursor = self.collection.find(query)
+        results = []
+        async for document in cursor:
+            document["place_id"] = str(document["_id"])
+            place = MongoPlace.model_validate(document)
+            results.append(place)
+
+        return results
+
 
 class MongoPlace(Place):
     version: int = 0
