@@ -1,3 +1,5 @@
+# Env
+
 python -m venv venv
 
 
@@ -7,6 +9,19 @@ source venv/bin/activate
 
 pip install "fastapi[standard]
 
+# Dependencies
+
+To install required deps, run the following command.
+
+```
+pip install -r requirements.txt
+```
+
+To update requirements file, run: 
+
+```
+pip freeze > requirements.txt
+```
 
 # Standalone deployment
 
