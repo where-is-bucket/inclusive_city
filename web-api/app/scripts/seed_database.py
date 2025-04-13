@@ -1,6 +1,7 @@
 import asyncio
 import json
 import sys
+from urllib.parse import urlsplit
 
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -50,6 +51,11 @@ async def seed_places(path):
 
         if  name is None or address is None or google_id is None:
            continue
+        
+        google_photo_url = item.get('photo_url')
+
+        if google_photo_url: 
+           google_photo_url = urlsplit(google_photo_url)._replace(query="").geturl()
 
         coordinates = item.get('google_coordinates')
         latitude = coordinates.get('latitude')
@@ -77,6 +83,7 @@ async def seed_places(path):
           place_type=place_type,
           address=address,
           description=place_description,
+          google_photo_url=google_photo_url,
           location=location)
           
         for facility_name in matched_facility_names:
