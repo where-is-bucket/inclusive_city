@@ -75,3 +75,31 @@ class DirectionsResponse(BaseModel):
                                 "waypoint_order": []}], "status": "OK"}
 
         }
+
+from typing import List, Optional
+from pydantic import BaseModel, Field
+from uuid import UUID
+
+
+class Facility(BaseModel):
+    facility_id: UUID
+    descriptive_name: str
+    disability_types: List[str]
+
+
+class Location(BaseModel):
+    latitude: float
+    longitude: float
+
+
+class Place(BaseModel):
+    place_id: str
+    place_name: str
+    address: str
+    description: Optional[str] = ""
+    google_photo_url: Optional[str]
+    accessibility_rate: float
+    location: Location
+    facilities: List[Facility]
+    place_types: List[str]
+    reviews: List
