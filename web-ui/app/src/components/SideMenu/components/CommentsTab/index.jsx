@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import ReviewRow from "./components/ReviewRow/index.jsx";
 import {FiEdit3} from "react-icons/fi";
 import AddReviewForm from "./components/AddReviewForm/index.jsx";
@@ -17,6 +17,12 @@ const ReviewsTab = ({selectedMarker, refetchPlace}) => {
             setIsLoadingReviews(false);
         }
     }, [refetchPlace, selectedMarker.place_id]);
+
+    useEffect(() => {
+        if (selectedMarker?.reviews) {
+            setReviews(selectedMarker.reviews)
+        }
+    }, [selectedMarker]);
 
     return (
         <div className="comments">
