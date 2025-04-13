@@ -1,8 +1,12 @@
 from typing import List
 from geopy.distance import distance as geodistance
 from polyline import encode as polyline_encode
+import requests
+from pprint import pprint
+import json
 
-from structures import DirectionsResponse, Route, Leg, Step, Coordinate
+from structures import DirectionsResponse, Route, Leg, Step, Coordinate, Place
+from constants import webapi_url
 
 
 def inject_poi_into_route(route: Route, poi: Coordinate, max_distance_m: float = 0.01) -> Route:
@@ -59,3 +63,7 @@ def inject_poi_into_route(route: Route, poi: Coordinate, max_distance_m: float =
 
     route.legs = new_legs
     return route
+
+def get_all_places():
+    places: List[Place] = [Place(**p) for p in requests.get(f"http://{webapi_url}/api/v1/places", timeout=3).json()]
+    return places
