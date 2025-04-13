@@ -7,8 +7,7 @@ from app.domain.placeType import PlaceType
 from app.domain.review import Review
 
 class Place(BaseModel):
-    place_id: Optional[str] = None
-    google_id: str
+    place_id: str
     place_name: str
     place_type: PlaceType
     address: str
@@ -21,15 +20,13 @@ class Place(BaseModel):
     def add_review(self, review: Review) -> None:
         self.reviews.append(review)
 
-    def add_facility(self, facility: Facility):
+    def add_facility(self, addedFacility: Facility):
         
-        if any(x.facility_id == facility.facility_id for x in self.facilities):
-            raise FacilityAlreadyExistException(facility)
+        if any(x.facility_id == addedFacility.facility_id for x in self.facilities):
+            return
 
-        self.facilities.append(facility)
+        self.facilities.append(addedFacility)
 
-class FacilityAlreadyExistException(Exception):
-    def __init__(self, accessibility: Facility):
-        self.accessibility = accessibility
+    def remove_facility(self, removedFacility: Facility):
 
-        super().__init__(f"Facility feature '{accessibility.name}' already exists.")
+        self.facilities = [f for f in self.facilities if f.facility_id != removedFacility.facility_id]
