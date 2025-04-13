@@ -1,7 +1,8 @@
-import dataclasses
-from typing import List
+# import dataclasses
+# from typing import List
 
-from pydantic_core.core_schema import plain_serializer_function_ser_schema
+import math
+# from pydantic_core.core_schema import plain_serializer_function_ser_schema
 from textblob import TextBlob
 from langdetect import detect
 from deep_translator import GoogleTranslator
@@ -37,54 +38,67 @@ def sentiments(text):
     text = TextBlob(text)
     return text.sentiment.polarity
 
+
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+
 def calculate_inclusivity_score(place: Place):
     reviews = [review.review_text for review in place.reviews]
-    average = sum([review.review_score for review in place.reviews]) / len(place.reviews)
+    scores = [review.review_score for review in place.reviews if review.review_score is not None]
+
+    if not scores:
+        return 0.0
+
+    average = sum(scores) / len(scores)
     relevant = []
     positive_mentions = 0
-    total_mentions = len(reviews)
-    print(average)
+    relevant_mentions = 0
 
     for review in reviews:
-        text = review
-
-        if not text.strip():
+        if not review.strip():
             continue
 
         try:
-            lang = detect(text)
+            lang = detect(review)
         except:
             continue
 
         if lang != "uk":
             continue
 
-        text_lower = text.lower()
+        text_lower = review.lower()
         if any(k in text_lower for k in ACCESSIBILITY_KEYWORDS):
             try:
-                translated = translate_uk_to_en(text)
+                translated = translate_uk_to_en(review)
                 sentiment = sentiments(str(translated))
+                relevant_mentions += 1
                 if sentiment > 0:
                     positive_mentions += 1
                 relevant.append({
-                    "original": text,
+                    "original": review,
                     "translated": str(translated),
                     "sentiment": round(sentiment, 2)
                 })
             except:
                 continue
 
-    if total_mentions == 0:
-        return 0.0  # Немає згадок = 0 балів
-    print(total_mentions, positive_mentions)
-    ratio = positive_mentions / total_mentions
-    score = round(0.7 * ratio + 0.3 * ((average - 1) / 4), 2)  # ваги можна налаштовувати
+    if relevant_mentions == 0:
+        sentiment_score = 0.0
+    else:
+        sentiment_score = positive_mentions / relevant_mentions
 
-    return score
+    normalized_rating = (average - 1) / 4  # (1 = 0, 5 = 1)
+
+    raw_score = 0.6 * sentiment_score + 0.4 * normalized_rating
+
+    scaled_score = sigmoid(raw_score * 5 - 2.5)  # центруємо біля 0.5
+
+    return round(scaled_score, 2)
 
 
-# review_1 = Review(review_score = 4, review_text = "Тут є чудовий пандус")
-# review_2 = Review(review_score = 1, review_text = "Ненавиджу тутешній ліфт")
+# review_1 = Review(review_score = 5, review_text = "Люблю пандус")
+# review_2 = Review(review_score = 5, review_text = "Люблю ліфт")
 # place = Place(reviews=[review_1, review_2])
 #
 # score = calculate_inclusivity_score(place)
