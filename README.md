@@ -83,6 +83,52 @@ inclusive_city/
 4. Натисніть **"Create credentials" → API key**.
 5. Скопіюйте ключ і додайте у `.env` файл у корені проєкту:
 
+## ER model
+```
++------------------+       +---------------+        +---------------------+
+|      Author      |<----->|    Review     |<------>|       Place         |
+|------------------|       |---------------|        |---------------------|
+| author_name:str  |       | review_id:str |        | place_id: str       |
++------------------+       | review_text   |        | place_name: str     |
+                           | review_score  |        | address: str        |
+                           | author        |        | description: str    |
+                           +---------------+        | google_photo_url:?  |
+                                                   | location: Location  |
+                                                   | accessibility_rate  |
+                                                   | place_types: [str]  |
+                                                   | reviews: [Review]   |
+                                                   | facilities: [Fac.]  |
+                                                   +----------^----------+
+                                                              |
+                                                              |
+                                    +-------------------------+------------------------+
+                                    |                                                  |
+                         +-------------------+                          +------------------------+
+                         |     Facility       |                          |       Location         |
+                         |-------------------|                          |------------------------|
+                         | facility_id: str  |                          | latitude: float        |
+                         | disability_types  |                          | longitude: float       |
+                         | descriptive_name  |                          +------------------------+
+                         +-------------------+
+                                  |
+                                  v
+                    +---------------------------+
+                    |     DisabilityType (Enum) |
+                    +---------------------------+
+                    | VISUAL_IMPAIRMENT         |
+                    | HEARING_IMPAIRMENT        |
+                    | MOBILITY_IMPAIRMENT       |
+                    +---------------------------+
+
++---------------------+
+|       User          |
+|---------------------|
+| id: int             |
+| name: str           |
+| is_special: bool    |
++---------------------+
+```
+
 ## Зв'язок
 
 Проєкт розроблений з метою покращення доступності міського середовища для людей з інвалідністю.
