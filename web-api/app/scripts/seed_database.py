@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 import sys
 from urllib.parse import urlsplit
 
@@ -17,7 +18,8 @@ from app.domain.placeType import PlaceType
 from app.infrastructure.mongoFacilityRepository import MongoFacilityRepository
 from app.infrastructure.mongoPlaceRepository import MongoPlaceRepository
 
-MONGO_URI = "mongodb://localhost:27017?directConnection=true"
+MONGO_URI = os.getenv("MONGO_CONNECTION") or f"mongodb://localhost:27017?directConnection=true"
+#MONGO_URI = f"mongodb://localhost:27017?directConnection=true"
 
 client = AsyncIOMotorClient(MONGO_URI)
 database = client["MyDb"]
@@ -121,9 +123,25 @@ async def main():
 
     print("Facilities path: " + facilitiesPath)
     print("Lun path: " + lunPath)
+    print(MONGO_URI)
 
-    await seed_facilities(facilitiesPath)
-    await seed_places(lunPath, apiKey)
+
+    current_facilities = await database["Facilities"].count_documents({})
+
+    if current_facilities == 0:
+      print('Seeding facilities')
+      await seed_facilities(facilitiesPath)
+    else:
+       print('Skip facilities seeding')
+
+    current_places = await database["Places"].count_documents({})
+
+    if current_places == 0:
+      print('Seeding places')
+      await seed_places(lunPath, apiKey)
+    else:
+       print('Skip places seeding')
+
    
 
 asyncio.run(main())
