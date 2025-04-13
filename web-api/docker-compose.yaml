@@ -2,10 +2,13 @@ services:
   web-api:
     build: .
     container_name: web-api
+    networks:
+      - shared-net
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       GOOGLE_API_TOKEN: ${GOOGLE_API_TOKEN}
+      MONGO_CONNECTION: ${MONGO_CONNECTION}
     ports:
       - "8000:8000"
     volumes:

@@ -6,6 +6,9 @@ include:
   - ./route_management/docker-compose.yaml
   - ./mongodb/docker-compose.yaml
 
+networks:
+  shared-net: {}
+
 volumes:
   mongo-volume:
     driver: local

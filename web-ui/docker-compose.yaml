@@ -2,6 +2,8 @@ services:
   web-ui:
     container_name: web-ui
     build: .
+    networks:
+      - shared-net
     ports:
       - "80:80"
     restart: unless-stopped

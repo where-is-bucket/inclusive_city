@@ -2,6 +2,8 @@ services:
   route_management:
     build: .
     container_name: route_management
+    networks:
+      - shared-net
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}

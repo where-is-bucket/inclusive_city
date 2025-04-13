@@ -1,6 +1,8 @@
 services:
   mongodb:
-    container_name: mongodb
+    hostname: ${MONGO_HOSTNAME}
+    networks:
+      - shared-net
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
