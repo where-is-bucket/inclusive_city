@@ -29,7 +29,7 @@ class MongoPlaceRepository:
         place = MongoPlace.model_validate(document) 
 
         return place
-    
+
     async def save(self, place: Place):
 
         if not hasattr(place, 'version'):
