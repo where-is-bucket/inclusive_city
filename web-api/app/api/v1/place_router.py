@@ -56,7 +56,7 @@ async def recalculate_power_coef(
         place_id: str,
         place_repository: MongoPlaceRepository = Depends(get_place_repository)):
 
-    place = await place_repository.get_by_str_id(place_id)
+    place = await place_repository.get_by_id(place_id)
     place.accessibility_rate = calculate_inclusivity_score(place)
     await place_repository.save(place)
 
@@ -68,7 +68,7 @@ async def get_places_by_disability_types(
         disability_type: List[str] = Query(default=[]),
         place_repository: MongoPlaceRepository = Depends(get_place_repository)):
 
-    places = await place_repository.get_by_id(disability_type)
+    places = await place_repository.find_by_disability_types(disability_type)
 
     return places
 
