@@ -8,6 +8,7 @@ from app.domain.review import Review
 
 class Place(BaseModel):
     place_id: Optional[str] = None
+    google_id: str
     place_name: str
     place_type: PlaceType
     address: str
@@ -22,7 +23,7 @@ class Place(BaseModel):
 
     def add_facility(self, facility: Facility):
         
-        if any(x.id == facility.id for x in self.facilities):
+        if any(x.facility_id == facility.facility_id for x in self.facilities):
             raise FacilityAlreadyExistException(facility)
 
         self.facilities.append(facility)

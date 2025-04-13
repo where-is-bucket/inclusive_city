@@ -6,6 +6,7 @@ from app.domain.place import Place
 class CreatePlaceRequest(BaseModel):
     place_name: str
     place_type: str
+    google_id: str
     description: str
     address: str
     latitude: int

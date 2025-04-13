@@ -79,8 +79,43 @@
     {
       "text": "Шрифт Брайля",
       "disability_types": [
-        "VISUAL_IMPAIRMENT",
-        "HEARING_IMPAIRMENT"
+        "VISUAL_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Пандус",
+      "disability_types": [
+        "MOBILITY_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Парковка для людей з інвалідністю",
+      "disability_types": [
+        "MOBILITY_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Вхід в рівень з тротуаром",
+      "disability_types": [
+        "MOBILITY_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Тактильне маркування",
+      "disability_types": [
+        "VISUAL_IMPAIRMENT"
+      ]
+    },
+    {
+      "text": "Кнопка виклику персоналу",
+      "disability_types": [
+        "MOBILITY_IMPAIRMENT"
       ]
     }
   ]
+
+
+  
+
+  
+  
