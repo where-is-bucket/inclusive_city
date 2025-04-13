@@ -11,7 +11,7 @@ import {decodePolyline} from "./services/polyline-service.js";
 import {Polyline} from "./components/GoogleMap/Polyline/index.jsx";
 import {getRoute} from "./api/direction-api.js";
 
-const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
+const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAP_ID;
 
 const DISABILITY_TYPE_VISUAL_IMPAIRMENT = 'Visual Impairment';
 const DISABILITY_TYPE_HEARING_IMPAIRMENT = 'Hearing Impairment';
