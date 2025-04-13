@@ -4,6 +4,8 @@ import sys
 
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from pymongo.errors import DuplicateKeyError
+
 from app.domain.disabilityTypes import DisabilityType
 from app.domain.facility import Facility
 from app.domain.location import Location
@@ -27,16 +29,14 @@ async def seed_facilities(path):
             text = text=item.get('text')
             disability_types = [DisabilityType[d] for d in item["disability_types"]]
      
-            facility = Facility.create(
-            text=text,
-            disability_types=disability_types)
+            facility = Facility.create(descriptive_name=text, disability_types=disability_types)
      
             await facilityRepository.save(facility)    
 
 async def seed_places(path):
     facilities = await facilityRepository.get_all()
 
-    facility_map = {facility.text: facility for facility in facilities}
+    facility_map = {facility.descriptive_name: facility for facility in facilities}
 
     data = []
 
@@ -72,9 +72,9 @@ async def seed_places(path):
         place_type = PlaceType(type_name=place_type)
 
         place = Place(
+          place_id=google_id,
           place_name=name,
           place_type=place_type,
-          google_id=google_id,
           address=address,
           description=place_description,
           location=location)
@@ -82,7 +82,10 @@ async def seed_places(path):
         for facility_name in matched_facility_names:
           place.add_facility(facility_map.get(facility_name))
 
-        await placeRepository.save(place)
+        try:
+          await placeRepository.save(place)
+        except DuplicateKeyError:
+           ...
    
 async def main():
    

@@ -1,23 +1,23 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
-from typing import List, Optional
+from typing import List, Optional, Union
 
-from app.di import get_place_repository
+from app.di import get_facility_repository, get_place_repository
+from app.domain.disabilityTypes import DisabilityType
 from app.domain.location import Location
 from app.domain.place import Place
 from app.domain.placeType import PlaceType
+from app.infrastructure.mongoFacilityRepository import MongoFacilityRepository
 from app.infrastructure.mongoPlaceRepository import MongoPlaceRepository
-from app.schemas.placeSchemas import CreatePlaceRequest, CreatePlaceResponse, GetPlacesResponse
+from app.schemas.placeSchemas import CreatePlaceRequest, CreatePlaceResponse
 
 
 router = APIRouter()
 
-@router.get("/places", response_model=GetPlacesResponse)
+@router.get("/places", response_model=List[Place])
 async def get_places(place_repository: MongoPlaceRepository = Depends(get_place_repository)):
 
-    places = await place_repository.get_all();
-
-    return GetPlacesResponse(places=places)
+    return await place_repository.get_all()
 
 @router.get("/places/{place_id}", response_model=Place)
 async def get_by_id(
@@ -52,9 +52,50 @@ async def create_place(
 
 @router.get("/place", response_model=List[Place])
 async def get_places_by_disability_types(
-        disability_types: List[str] = Query(default=[]),
+        disability_types: List[DisabilityType] = Query(default=[]),
         place_repository: MongoPlaceRepository = Depends(get_place_repository)):
 
     places = await place_repository.find_by_disability_types(disability_types)
 
     return places
+
+
+@router.put("/place/{place_id}/facilities/{facility_id}", response_model=None)
+async def update_place_facilities(
+    place_id: str,
+    facility_id: str,
+    facility_repository: MongoFacilityRepository = Depends(get_facility_repository),
+    place_repository: MongoPlaceRepository = Depends(get_place_repository)):
+
+    facility = await facility_repository.get_by_id(facility_id=facility_id)
+    place = await place_repository.get_by_id(place_id=place_id)
+
+    if facility is None:
+        HTTPException(status_code=404, detail="Facility not found")
+
+    if place is None:
+        HTTPException(status_code=404, detail="Place not found")
+    
+    place.add_facility(addedFacility=facility)
+
+    await place_repository.save(place)
+
+@router.delete("/place/{place_id}/facilities/{facility_id}", response_model=None)
+async def delete_place_facilities(
+    place_id: str,
+    facility_id: str,
+    facility_repository: MongoFacilityRepository = Depends(get_facility_repository),
+    place_repository: MongoPlaceRepository = Depends(get_place_repository)):
+
+    facility = await facility_repository.get_by_id(facility_id=facility_id)
+    place = await place_repository.get_by_id(place_id=place_id)
+
+    if facility is None:
+        HTTPException(status_code=404, detail="Facility not found")
+
+    if place is None:
+        HTTPException(status_code=404, detail="Place not found")
+    
+    place.remove_facility(removedFacility=facility)
+
+    await place_repository.save(place)
