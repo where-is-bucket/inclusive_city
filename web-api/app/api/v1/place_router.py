@@ -69,7 +69,7 @@ async def get_places_by_disability_types(
         disability_type: List[str] = Query(default=[]),
         place_repository: MongoPlaceRepository = Depends(get_place_repository)):
 
-    places = await place_repository.find_by_disability_types(disability_type)
+    places = await place_repository.get_by_id(disability_type)
 
     return places
 

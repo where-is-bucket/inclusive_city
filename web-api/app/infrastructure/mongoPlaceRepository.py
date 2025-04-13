@@ -30,17 +30,6 @@ class MongoPlaceRepository:
 
         return place
 
-    async def get_by_str_id(self, place_id: str) -> Optional[Place]:
-
-        document = await self.collection.find_one({"_id": place_id})
-
-        if document is None:
-            return None
-
-        place = MongoPlace.model_validate(document)
-
-        return place
-    
     async def save(self, place: Place):
 
         if not hasattr(place, 'version'):
