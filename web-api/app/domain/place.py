@@ -9,7 +9,7 @@ from app.domain.review import Review
 class Place(BaseModel):
     place_id: str
     place_name: str
-    place_type: PlaceType
+    place_types: List[str] = [],
     address: str
     description: str
     google_photo_url: Optional[str]
