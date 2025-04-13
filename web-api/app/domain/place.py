@@ -12,6 +12,7 @@ class Place(BaseModel):
     place_type: PlaceType
     address: str
     description: str
+    google_photo_url: Optional[str]
     location: Location
     accessibility_rate: float = 0
     reviews: List[Review] = []
