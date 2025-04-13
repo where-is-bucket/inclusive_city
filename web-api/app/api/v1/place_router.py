@@ -66,7 +66,6 @@ async def recalculate_power_coef(
 
 @router.get("/search-places", response_model=List[Place])
 async def get_places_by_disability_types(
-        disability_types: List[DisabilityType] = Query(default=[]),
         disability_type: List[str] = Query(default=[]),
         place_repository: MongoPlaceRepository = Depends(get_place_repository)):
 
