@@ -1,6 +1,7 @@
 version: "3.8"
 
 include:
+  - ./web-ui/docker-compose.yaml
   - ./web-api/docker-compose.yaml
   - ./route_management/docker-compose.yaml
   - ./mongodb/docker-compose.yaml

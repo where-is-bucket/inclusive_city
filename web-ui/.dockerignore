@@ -1,0 +1,6 @@
+app/node_modules
+.git
+app/dist
+.env
+Dockerfile
+docker-compose.yml

@@ -1,0 +1,14 @@
+services:
+  web-ui:
+    container_name: web-ui
+    build: .
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    environment:
+      VITE_GOOGLE_API_TOKEN: ${GOOGLE_API_TOKEN}
+      VITE_GOOGLE_MAP_ID: ${GOOGLE_MAP_ID}
+      VITE_WEB_API_BASE_URL: ${WEB_API_BASE_URL}
+      VITE_ROUTE_MANAGEMENT_API_BASE_URL: ${ROUTE_MANAGEMENT_API_BASE_URL}
+    volumes:
+      - ./app:/usr/src/app
