@@ -33,14 +33,13 @@ async def create_place(
 
     location = Location(request.latitude, request.longitude)
 
-    place_type = PlaceType(type_name=request.place_type)
-
     place = Place(
+        place_id=request.google_id,
         place_name=request.place_name,
-        place_type=place_type,
-        google_id=request.google_id,
+        place_types=request.place_types,
         address=request.address,
         description=request.description,
+        google_photo_url=request.google_photo_url or "",
         location=location)
     
     await place_repository.save(place)

@@ -3,6 +3,8 @@ import json
 import sys
 from urllib.parse import urlsplit
 
+import requests
+
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from pymongo.errors import DuplicateKeyError
@@ -34,7 +36,7 @@ async def seed_facilities(path):
      
             await facilityRepository.save(facility)    
 
-async def seed_places(path):
+async def seed_places(path, api_key):
     facilities = await facilityRepository.get_all()
 
     facility_map = {facility.descriptive_name: facility for facility in facilities}
@@ -72,15 +74,27 @@ async def seed_places(path):
 
         location = Location(latitude=latitude, longitude=longitude)
 
-        # intentionally empty - need to improve crawler
-        place_description = ""
-        place_type = ""
-        place_type = PlaceType(type_name=place_type)
+        place_description = ''
+        place_types = []
 
+        # enrich additional data
+        url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={google_id}&key={api_key}"
+        
+        response = requests.get(url)
+        data = response.json()
+        if data.get("status") == "OK":
+            
+          result = data["result"]
+
+          if result:          
+            place_types = result.get("types", [])
+            place_description = result.get("editorial_summary", {}).get("overview", '')
+
+        
         place = Place(
           place_id=google_id,
           place_name=name,
-          place_type=place_type,
+          place_types=place_types,
           address=address,
           description=place_description,
           google_photo_url=google_photo_url,
@@ -93,22 +107,23 @@ async def seed_places(path):
           await placeRepository.save(place)
         except DuplicateKeyError:
            ...
-   
+
 async def main():
    
-    if len(sys.argv) != 3:
-        print("Usage: python -m app.scripts.seed_database <lunData path>.json <facilities>.json")
+    if len(sys.argv) != 4:
+        print("Usage: python -m app.scripts.seed_database <lunData path>.json <facilities>.json <api_key>")
 
         sys.exit(1)
 
     facilitiesPath = sys.argv[1]
     lunPath = sys.argv[2]
+    apiKey = sys.argv[3]
 
     print("Facilities path: " + facilitiesPath)
     print("Lun path: " + lunPath)
 
     await seed_facilities(facilitiesPath)
-    await seed_places(lunPath)
+    await seed_places(lunPath, apiKey)
    
 
 asyncio.run(main())
