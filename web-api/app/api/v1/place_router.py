@@ -38,6 +38,7 @@ async def create_place(
     place = Place(
         place_name=request.place_name,
         place_type=place_type,
+        google_id=request.google_id,
         address=request.address,
         description=request.description,
         location=location)
