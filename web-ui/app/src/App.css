@@ -335,6 +335,7 @@ body {
 .side-menu__tab-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Стилі для компонента Overview */
@@ -935,4 +936,173 @@ body {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* Добавьте эти стили в ваш файл CSS */
+.facilities-container {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 15px;
+}
+
+.facilities-list-container {
+  flex: 1;
+  min-width: 0; /* Важно для правильного переноса текста */
+}
+
+.facilities-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.edit-facilities-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4285f4;
+  padding: 5px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.edit-facilities-btn:hover {
+  background: rgba(66, 133, 244, 0.1);
+  transform: scale(1.1);
+}
+
+.facilities-edit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 28px;
+}
+
+.action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.save-btn {
+  background-color: #34a853;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #2d9248;
+}
+
+.cancel-btn {
+  background-color: #ea4335;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #d33426;
+}
+
+.power-data {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.power-data__item {
+  padding: 8px 0;
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+  word-break: break-word; /* Перенос длинных слов */
+}
+
+.power-data__item:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #4285f4;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Улучшенные стили для react-select */
+.facilities-select {
+  margin-bottom: 10px;
+}
+
+.select__control {
+  border: 1px solid #ddd !important;
+  box-shadow: none !important;
+  min-height: 40px !important;
+}
+
+.select__control--is-focused {
+  border-color: #4285f4 !important;
+  box-shadow: 0 0 0 1px #4285f4 !important;
+}
+
+.select__multi-value {
+  background-color: #e6f0fd !important;
+  border-radius: 4px !important;
+  max-width: 200px !important;
+}
+
+.select__multi-value__label {
+  color: #4285f4 !important;
+  font-size: 13px !important;
+  padding: 2px 6px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  max-width: 180px !important;
+}
+
+.select__multi-value__remove:hover {
+  background-color: transparent !important;
+  color: #3367d6 !important;
+}
+
+.select__menu {
+  z-index: 1000 !important;
+}
+
+.select__option {
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+.facilities-select {
+  position: relative; /* Важно для позиционирования меню */
+  margin-bottom: 10px;
+}
+
+.select__control {
+  border: 1px solid #ddd !important;
+  box-shadow: none !important;
+  min-height: 40px !important;
+}
+
+.select__menu {
+  right: 0 !important;
+  left: auto !important;
+  width: auto !important;
+  min-width: 100% !important;
+  z-index: 1000 !important;
+}
+
+.select__menu-list {
+  padding: 4px !important;
+}
+
+.select__option {
+  white-space: normal !important;
+  word-break: break-word !important;
+  padding: 8px 12px !important;
 }

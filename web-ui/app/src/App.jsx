@@ -4,7 +4,7 @@ import {
     AdvancedMarker, Pin,
 } from '@vis.gl/react-google-maps';
 import './App.css';
-import {getPlaces, getPlaceById} from "./api/places-api.js";
+import {getPlaces, getPlaceById, getFacilities} from "./api/places-api.js";
 import SideMenu from "./components/SideMenu/index.jsx";
 import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
 import {decodePolyline} from "./services/polyline-service.js";
@@ -18,6 +18,7 @@ const DISABILITY_TYPE_MOBILITY_IMPAIRMENT = 'Mobility Impairment';
 
 export default function App() {
     const [markers, setMarkers] = useState([]);
+    const [availableFacilities, setAvailableFacilities] = useState([]);
     const [filteredMarkers, setFilteredMarkers] = useState([]);
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,6 +39,11 @@ export default function App() {
     const fetchMarkers = async () => {
         const response = await getPlaces();
         setMarkers(response.data)
+    }
+
+    const fetchAvailableFacilities = async () => {
+        const response = await getFacilities();
+        setAvailableFacilities(response.data)
     }
 
     const fetchMarker = async (place_id) => {
@@ -67,8 +73,32 @@ export default function App() {
         }
     }
 
+    const setFacilitiesForMarker = async (placeId, facilities) => {
+        try {
+            setMarkers(prevMarkers =>
+                prevMarkers.map(marker =>
+                    marker.place_id === placeId
+                        ? { ...marker, facilities }
+                        : marker
+                )
+            );
+
+            setSelectedMarker(prev =>
+                prev?.place_id === placeId
+                    ? { ...prev, facilities }
+                    : prev
+            );
+
+            return true;
+        } catch (error) {
+            console.error('Error updating facilities:', error);
+            throw error;
+        }
+    };
+
     useEffect(() => {
         fetchMarkers();
+        fetchAvailableFacilities();
     }, []);
 
     useEffect(() => {
@@ -316,6 +346,8 @@ export default function App() {
                 onSubmitRoute={handleRouteSubmit}
                 isLoadingRoute={isLoadingRoute}
                 refetchPlace={fetchMarker}
+                availableFacilities={availableFacilities}
+                setFacilitiesForMarker={setFacilitiesForMarker}
             />
         </div>
     );

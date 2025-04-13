@@ -23,6 +23,8 @@ const SideMenu = ({
                       onSubmitRoute,
                       isLoadingRoute,
                       refetchPlace,
+                      availableFacilities,
+                      setFacilitiesForMarker,
                   }) => {
     const [activeTab, setActiveTab] = useState(TAB_OVERVIEW);
 
@@ -103,7 +105,11 @@ const SideMenu = ({
 
                                 <div className="side-menu__tab-content">
                                     {activeTab === TAB_OVERVIEW ? (
-                                        <OverviewTab selectedMarker={selectedMarker}/>
+                                        <OverviewTab
+                                            selectedMarker={selectedMarker}
+                                            availableFacilities={availableFacilities}
+                                            setFacilitiesForMarker={setFacilitiesForMarker}
+                                        />
                                     ) : (
                                         <ReviewsTab selectedMarker={selectedMarker} refetchPlace={refetchPlace}/>
                                     )}
